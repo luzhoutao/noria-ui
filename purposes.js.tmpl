@@ -1,0 +1,28 @@
+    <script>
+      $("#purposes-table").bootstrapTable();
+      $("#purposes-table").bootstrapTable('append', [{data:"alice",purposes:"heihei"}]);
+
+      function update() {
+        $.ajax({
+          url: "http://" + controller_addr + "/purposes",
+          dataType: "json",
+          success: function(data) {
+            let rows = [];
+            $.each(data, function(name, purposes) {
+              rows.push({
+                data: name,
+                purposes: purposes.split(","),
+              })
+            });
+            $("#purposes-table").bootstrapTable('load', rows);
+            feather.replace()
+          },
+          error: function(e) {
+            $("#error-msg").html("AJAX request to controller API failed: " + e.statusText).addClass("show");
+          }
+        });
+      }
+
+      update();
+      setInterval(update, 1000);
+    </script>
